@@ -17,3 +17,5 @@ preprocessed
 python/preprocessed
 output
 mlperf_log_*
+ILSVRC2012_img_val/
+mobilenet_v1_1.0_224/

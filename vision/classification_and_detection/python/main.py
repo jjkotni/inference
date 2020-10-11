@@ -45,7 +45,7 @@ SUPPORTED_DATASETS = {
          {"image_size": [300, 300, 3]}),
     "coco-300-pt":
         (coco.Coco, dataset.pre_process_coco_pt_mobilenet, coco.PostProcessCocoPt(False,0.3),
-         {"image_size": [300, 300, 3]}),         
+         {"image_size": [300, 300, 3]}),
     "coco-1200":
         (coco.Coco, dataset.pre_process_coco_resnet34, coco.PostProcessCoco(),
          {"image_size": [1200, 1200, 3]}),
@@ -98,6 +98,13 @@ SUPPORTED_PROFILES = {
         "dataset": "imagenet_mobilenet",
         "outputs": "MobilenetV1/Predictions/Reshape_1:0",
         "backend": "onnxruntime",
+        "model-name": "mobilenet",
+    },
+    "mobilenet-ow": {
+        "inputs": "input:0",
+        "outputs": "MobilenetV1/Predictions/Reshape_1:0",
+        "dataset": "imagenet_mobilenet",
+        "backend": "openwhisk",
         "model-name": "mobilenet",
     },
 
@@ -240,10 +247,13 @@ def get_backend(backend):
         backend = BackendPytorch()
     elif backend == "pytorch-native":
         from backend_pytorch_native import BackendPytorchNative
-        backend = BackendPytorchNative()      
+        backend = BackendPytorchNative()
     elif backend == "tflite":
         from backend_tflite import BackendTflite
         backend = BackendTflite()
+    elif backend == "openwhisk":
+        from backend_ow import BackendOW
+        backend = BackendOW()
     else:
         raise ValueError("unknown backend: " + backend)
     return backend

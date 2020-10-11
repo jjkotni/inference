@@ -3,8 +3,11 @@
 source run_common.sh
 
 dockercmd=docker
+# if [ $device == "gpu" ]; then
+#     runtime="--runtime=nvidia"
+# fi
 if [ $device == "gpu" ]; then
-    runtime="--runtime=nvidia"
+    runtime="--gpus=all"
 fi
 
 # copy the config to cwd so the docker contrainer has access
@@ -23,4 +26,4 @@ opts="--mlperf_conf ./mlperf.conf --profile $profile $common_opt --model $model_
 docker run $runtime -e opts="$opts" \
     -v $DATA_DIR:$DATA_DIR -v $MODEL_DIR:$MODEL_DIR -v `pwd`:/mlperf \
     -v $OUTPUT_DIR:/output -v /proc:/host_proc \
-    -t $image:latest /mlperf/run_helper.sh 2>&1 | tee $OUTPUT_DIR/output.txt
+    --network host -t $image:latest /mlperf/run_helper.sh 2>&1 | tee $OUTPUT_DIR/output.txt

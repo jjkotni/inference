@@ -18,7 +18,7 @@ device="cpu"
 
 for i in $* ; do
     case $i in
-       tf|onnxruntime|tflite|pytorch) backend=$i; shift;;
+       tf|onnxruntime|tflite|pytorch|ow) backend=$i; shift;;
        cpu|gpu) device=$i; shift;;
        gpu) device=gpu; shift;;
        resnet50|mobilenet|ssd-mobilenet|ssd-resnet34|ssd-resnet34-tf) model=$i; shift;;
@@ -109,6 +109,15 @@ if [ $name == "mobilenet-tflite" ] ; then
     model_path="$MODEL_DIR/mobilenet_v1_1.0_224.tflite"
     profile=mobilenet-tf
     extra_args="$extra_args --backend tflite"
+fi
+
+#
+# tflite
+#
+if [ $name == "mobilenet-ow" ] ; then
+    #TODO: Put action names here?
+    model_path="$MODEL_DIR/mobilenet_v1_1.0_224_frozen.pb"
+    profile=mobilenet-ow
 fi
 
 name="$backend-$device/$model"
